@@ -4,8 +4,16 @@ import 'package:yalarm/alarmsProvider.dart';
 import 'createAlarm.dart';
 import 'Alarms.dart';
 
-void main() => runApp(ChangeNotifierProvider(
-    builder: (context) => AlarmsProvider(), child: MyApp()));
+void main() => runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => AlarmsProvider(),
+          ),
+        ],
+        child: MyApp(),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -49,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     List<Widget> allWidgetsAlarms = List<Widget>();
 
     return Consumer<AlarmsProvider>(
-      builder: (context, alarmsProviderItem, _) {
+      builder: (_, alarmsProviderItem, child) {
         List<YAlarms> localAlarms = alarmsProviderItem.alarms;
         if (localAlarms.length != 0) {
           allWidgetsAlarms = [];

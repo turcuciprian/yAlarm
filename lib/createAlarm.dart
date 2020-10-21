@@ -55,7 +55,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AlarmsProvider>(
-        builder: (context, alarmsProviderItemLink, _) {
+        builder: (_, alarmsProviderItemLink, child) {
       return Scaffold(
         appBar: AppBar(
           title: Text(_dynamicText),
