@@ -5,6 +5,13 @@ import 'dart:convert';
 
 class AlarmsProvider with ChangeNotifier {
   List<YAlarms> alarms = List<YAlarms>();
+  String _receive_sharing_intent_link;
+  String get rsiLink => _receive_sharing_intent_link;
+  void setrsiLink(String newValue){
+    _receive_sharing_intent_link = newValue;
+    notifyListeners();
+
+  }
   List jSonAlarms = [];
   SharedPreferences prefs;
 

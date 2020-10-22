@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yalarm/alarmsProvider.dart';
+import 'package:yalarm/selectAlarm.dart';
 import 'createAlarm.dart';
 import 'Alarms.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 void main() => runApp(
       MultiProvider(
@@ -40,6 +44,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  StreamSubscription _intentDataStreamSubscription;
   void _addAlarm() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => CreateAlarm()));
@@ -50,6 +55,25 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
     super.initState();
     Provider.of<AlarmsProvider>(context, listen: false).getLocalStorage();
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    
+    // ReceiveSharingIntent.getInitialText().then((String value) {
+    //   print(value);
+    // });
+
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    _intentDataStreamSubscription =
+        ReceiveSharingIntent.getTextStream().listen((String value) {
+          Provider.of<AlarmsProvider>(context, listen: false).setrsiLink(value);
+          Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SelectAlarm()));
+          
+      print(value);
+    }, onError: (err) {
+      print("getLinkStream error: $err");
+    });
+
+
   }
 
   @override
