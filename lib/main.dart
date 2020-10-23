@@ -72,10 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }, onError: (err) {
       print("getLinkStream error: $err");
     });
-
-
   }
-
   @override
   Widget build(BuildContext context) {
     List<Widget> allWidgetsAlarms = List<Widget>();

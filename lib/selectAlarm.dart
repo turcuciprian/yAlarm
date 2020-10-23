@@ -1,9 +1,8 @@
+import 'package:ext_video_player/ext_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yalarm/Alarms.dart';
 import 'alarmsProvider.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'yAlarmDayPicker.dart';
 
 class SelectAlarm extends StatefulWidget {
   SelectAlarm({Key key}) : super(key: key);
@@ -12,10 +11,17 @@ class SelectAlarm extends StatefulWidget {
 }
 
 class _SelectAlarmState extends State<SelectAlarm> {
+  VideoPlayerController _controller;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      String link = Provider.of<AlarmsProvider>(context, listen: false).rsiLink;
+      _controller = VideoPlayerController.network(
+        link,
+      )..initialize();
+    });
   }
 
   @override
@@ -23,11 +29,24 @@ class _SelectAlarmState extends State<SelectAlarm> {
     String link = Provider.of<AlarmsProvider>(context, listen: false).rsiLink;
     return Scaffold(
       appBar: AppBar(
-        title: Text('select Alarm'),
+        title: Text('Select Alarm'),
       ),
       body: Container(
         child: Center(
-          child: Text(link),
+          child: Column(children: [
+            Container(child: VideoPlayer(_controller), width: 300, height: 180),
+            FlatButton(
+              child: Text(_controller.value.isPlaying ? 'Pause' : 'Play'),
+              onPressed: () {
+                setState(() {
+                _controller.value.isPlaying
+                    ? _controller.pause()
+                    : _controller.play();  
+                });
+                
+              },
+            )
+          ]),
         ),
       ),
     );
