@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void receivedSharingIntent(String value) {
-    if (value.length == 0) return;
+    if (value.length != 0) return;
     Provider.of<AlarmsProvider>(context, listen: false).setrsiLink(value);
     Navigator.push(
       context,
