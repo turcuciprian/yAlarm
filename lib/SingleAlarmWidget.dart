@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:yalarm/Alarms.dart';
 import 'package:yalarm/alarmsProvider.dart';
 import 'package:yalarm/createAlarm.dart';
+import 'package:yalarm/screenArguments.dart';
 
 class SingleAlarmWidget extends StatefulWidget {
   final YAlarms item;
   final AlarmsProvider alarmsProviderItem;
-  SingleAlarmWidget({Key key, this.item, this.alarmsProviderItem}) : super(key: key);
+  SingleAlarmWidget({Key key, this.item, this.alarmsProviderItem})
+      : super(key: key);
 
   _SingleAlarmWidgetState createState() => _SingleAlarmWidgetState();
 }
@@ -36,12 +38,15 @@ class _SingleAlarmWidgetState extends State<SingleAlarmWidget> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateAlarm(item: widget.item),
-                ),
-              );
+              Navigator.pushNamed(context, '/createAlarm',
+                  arguments: ScreenArguments(widget.item));
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => CreateAlarm(item: widget.item),
+              //   ),
+              // );
             },
           ),
           background: Container(
@@ -64,3 +69,5 @@ class _SingleAlarmWidgetState extends State<SingleAlarmWidget> {
     // return Container();
   }
 }
+
+

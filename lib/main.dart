@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yalarm/ListOfAlarms.dart';
 import 'package:yalarm/alarmsProvider.dart';
+import 'package:yalarm/screenArguments.dart';
 import 'package:yalarm/selectAlarm.dart';
 import 'createAlarm.dart';
 import 'Alarms.dart';
@@ -25,6 +26,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+          final ScreenArguments args = settings.arguments;
+        if (settings.name == '/createAlarm' && args!=null) {
+          return MaterialPageRoute(builder: (context) {
+            return CreateAlarm(item: args.item);
+          });
+        }
+        return MaterialPageRoute(builder: (context) {
+          return CreateAlarm();
+        });
+      },
+      routes: {
+        '/home': (context) => MyHomePage(),
+        // '/createAlarm': (context) => CreateAlarm(),
+        '/selectAlarm': (context) => SelectAlarm(),
+      },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -46,8 +64,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   void _addAlarm() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => CreateAlarm()));
+    Navigator.pushNamed(context, '/createAlarm');
   }
 
   @override
@@ -68,12 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void receivedSharingIntent(String value) {
-    if (value.length != 0) return;
+    if (value.length == 0) return;
     Provider.of<AlarmsProvider>(context, listen: false).setrsiLink(value);
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SelectAlarm()),
-    );
+    Navigator.pushNamed(context, '/selectAlarm');
   }
 
   @override
