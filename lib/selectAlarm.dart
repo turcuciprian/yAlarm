@@ -1,7 +1,7 @@
 import 'package:ext_video_player/ext_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yalarm/Alarms.dart';
+import 'package:yalarm/ListOfAlarms.dart';
 import 'alarmsProvider.dart';
 
 class SelectAlarm extends StatefulWidget {
@@ -26,7 +26,6 @@ class _SelectAlarmState extends State<SelectAlarm> {
 
   @override
   Widget build(BuildContext context) {
-    String link = Provider.of<AlarmsProvider>(context, listen: false).rsiLink;
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Alarm'),
@@ -39,43 +38,18 @@ class _SelectAlarmState extends State<SelectAlarm> {
               child: Text(_controller.value.isPlaying ? 'Pause' : 'Play'),
               onPressed: () {
                 setState(() {
-                _controller.value.isPlaying
-                    ? _controller.pause()
-                    : _controller.play();  
+                  _controller.value.isPlaying
+                      ? _controller.pause()
+                      : _controller.play();
                 });
-                
               },
+            ),
+            Container(
+              child: new ListOfAlarms(),
             )
           ]),
         ),
       ),
     );
-    List<Widget> allWidgetsAlarms = List<Widget>();
-    return Consumer<AlarmsProvider>(builder: (_, alarmsProviderItem, child) {
-      List<YAlarms> localAlarms = alarmsProviderItem.alarms;
-
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('select Alarm'),
-        ),
-        body: Container(
-          child: Center(
-              child: ListView.builder(
-            itemCount: allWidgetsAlarms.length,
-            padding: const EdgeInsets.only(left: 0.0),
-            itemBuilder: (BuildContext ctxt, int index) =>
-                allWidgetsAlarms[index],
-          )),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // addAlarm
-          },
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ),
-      );
-      ;
-    });
   }
 }
