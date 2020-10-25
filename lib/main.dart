@@ -45,9 +45,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StreamSubscription _intentDataStreamSubscription;
   void _addAlarm() {
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => CreateAlarm()));
   }
 
@@ -55,22 +54,26 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<AlarmsProvider>(context, listen: false).getLocalStorage();
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-
-    // ReceiveSharingIntent.getInitialText().then((String value) {
-    //   print(value);
-    // });
-
+    context.read<AlarmsProvider>().getLocalStorage();
     // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    _intentDataStreamSubscription =
-        ReceiveSharingIntent.getTextStream().listen((String value) {
-      Provider.of<AlarmsProvider>(context, listen: false).setrsiLink(value);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SelectAlarm()));
+
+    ReceiveSharingIntent.getTextStream().listen((String value) {
+      receivedSharingIntent(value);
     }, onError: (err) {
       print("getLinkStream error: $err");
     });
+    ReceiveSharingIntent.getInitialText().then((String value) {
+      receivedSharingIntent(value);
+    });
+  }
+
+  void receivedSharingIntent(String value) {
+    if (value.length > 0) return;
+    Provider.of<AlarmsProvider>(context, listen: false).setrsiLink(value);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectAlarm()),
+    );
   }
 
   @override

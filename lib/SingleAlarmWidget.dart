@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:yalarm/Alarms.dart';
+import 'package:yalarm/alarmsProvider.dart';
 import 'package:yalarm/createAlarm.dart';
 
 class SingleAlarmWidget extends StatefulWidget {
   final YAlarms item;
-  SingleAlarmWidget({Key key, this.item}) : super(key: key);
+  final AlarmsProvider alarmsProviderItem;
+  SingleAlarmWidget({Key key, this.item, this.alarmsProviderItem}) : super(key: key);
 
   _SingleAlarmWidgetState createState() => _SingleAlarmWidgetState();
 }
@@ -53,7 +55,7 @@ class _SingleAlarmWidgetState extends State<SingleAlarmWidget> {
               ..hideCurrentSnackBar()
               ..showSnackBar(snackBar);
             setState(() {
-              // alarmsProviderItem.removeAlarm(widget.item.id);
+              widget.alarmsProviderItem.removeAlarm(widget.item.id);
             });
           },
         );

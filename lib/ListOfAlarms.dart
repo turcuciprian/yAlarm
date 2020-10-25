@@ -11,37 +11,40 @@ class ListOfAlarms extends StatefulWidget {
 }
 
 class _ListOfAlarmsState extends State<ListOfAlarms> {
+  List<Widget> allWidgetsAlarms = List<Widget>();
+  void buildAlarmsList(alarmsProviderItem) {
+    List<YAlarms> localAlarms = alarmsProviderItem.alarms;
+    if (localAlarms.length != 0) {
+      allWidgetsAlarms = [];
+      List<Widget> tempAllWidgetsAlarms = [];
+      localAlarms.forEach((item) {
+        if (item == null) {
+          allWidgetsAlarms = [];
+          return;
+        }
+        tempAllWidgetsAlarms.add(SingleAlarmWidget(
+            item: item, alarmsProviderItem: alarmsProviderItem));
+      });
+      allWidgetsAlarms = tempAllWidgetsAlarms;
+    } else {
+      allWidgetsAlarms = [];
+    }
+  }
+
+  Widget buildBody(BuildContext ctxt, int index) {
+    return allWidgetsAlarms[index];
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Widget> allWidgetsAlarms = List<Widget>();
     return Consumer<AlarmsProvider>(
       builder: (_, alarmsProviderItem, child) {
-        List<YAlarms> localAlarms = alarmsProviderItem.alarms;
-        if (localAlarms.length != 0) {
-          allWidgetsAlarms = [];
-          localAlarms.forEach((item) {
-            if (item == null) {
-              allWidgetsAlarms = [];
-              return;
-            }
-            allWidgetsAlarms.add(SingleAlarmWidget(item: item));
-          });
-        } else {
-          allWidgetsAlarms = [];
-        }
-        Widget buildBody(BuildContext ctxt, int index) {
-          return allWidgetsAlarms[index];
-        }
-
-        return Expanded(
-          child: Center(
-            child: ListView.builder(
-              itemCount: allWidgetsAlarms.length,
-              padding: const EdgeInsets.only(left: 0.0),
-              itemBuilder: (BuildContext ctxt, int index) =>
-                  buildBody(ctxt, index),
-            ),
-          ),
+        buildAlarmsList(alarmsProviderItem);
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: allWidgetsAlarms.length,
+          padding: const EdgeInsets.only(left: 0.0),
+          itemBuilder: (BuildContext ctxt, int index) => buildBody(ctxt, index),
         );
       },
     );

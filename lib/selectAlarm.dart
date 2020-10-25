@@ -11,16 +11,18 @@ class SelectAlarm extends StatefulWidget {
 }
 
 class _SelectAlarmState extends State<SelectAlarm> {
-  VideoPlayerController _controller;
+  VideoPlayerController _controller = new VideoPlayerController.asset('');
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
       String link = Provider.of<AlarmsProvider>(context, listen: false).rsiLink;
-      _controller = VideoPlayerController.network(
-        link,
-      )..initialize();
+      if (link != null) {
+        _controller = VideoPlayerController.network(
+          link,
+        )..initialize();
+      }
     });
   }
 
