@@ -7,7 +7,6 @@ import 'package:yalarm/alarmsProvider.dart';
 import 'package:yalarm/screenArguments.dart';
 import 'package:yalarm/selectAlarm.dart';
 import 'createAlarm.dart';
-import 'Alarms.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 void main() => runApp(
@@ -22,7 +21,6 @@ void main() => runApp(
     );
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,7 +38,6 @@ class MyApp extends StatelessWidget {
       },
       routes: {
         '/home': (context) => MyHomePage(),
-        // '/createAlarm': (context) => CreateAlarm(),
         '/selectAlarm': (context) => SelectAlarm(),
       },
       debugShowCheckedModeBanner: false,

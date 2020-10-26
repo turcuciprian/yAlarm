@@ -1,3 +1,4 @@
+import 'package:ext_video_player/ext_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yalarm/Alarms.dart';
@@ -14,13 +15,17 @@ class CreateAlarm extends StatefulWidget {
 
 class _CreateAlarmState extends State<CreateAlarm> {
   int alarmID;
+  String link;
   String alarmName;
   String selectedTime = '';
+  String youtubeLink;
   DateTime alarmTime;
   bool onlyOnce = true;
   String _dynamicText = 'Add Alarm';
   TextEditingController alarmController;
   List<int> selectedDaysOfWeek = [0, 0, 0, 0, 0, 0, 0];
+  VideoPlayerController _controller = new VideoPlayerController.asset('');
+
   @override
   void initState() {
     // TODO: implement initState
@@ -32,6 +37,7 @@ class _CreateAlarmState extends State<CreateAlarm> {
         : selectedDaysOfWeek;
     if (widget.item != null && widget.item.title != null) {
       alarmName = widget.item.title;
+      youtubeLink = widget.item.youtubeLink;
       alarmController = new TextEditingController(text: alarmName);
       alarmTime = widget.item.time;
       if (alarmTime != null) {
@@ -46,6 +52,21 @@ class _CreateAlarmState extends State<CreateAlarm> {
     if (widget.item != null) {
       _dynamicText = 'Update Alarm';
     }
+    setState(() {
+      link = Provider.of<AlarmsProvider>(context, listen: false).rsiLink;
+      if (link != null) {
+        _controller = VideoPlayerController.network(
+          link,
+        )..initialize();
+      } else {
+        if (youtubeLink!=null && youtubeLink.length > 0) {
+          link = youtubeLink;
+          _controller = VideoPlayerController.network(
+            link,
+          )..initialize();
+        }
+      }
+    });
   }
 
   List<int> getDays(widgetDays) {
@@ -112,6 +133,29 @@ class _CreateAlarmState extends State<CreateAlarm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              //
+              link != null && link != 'null'
+                  ? Column(
+                      children: [
+                        Container(
+                            child: VideoPlayer(_controller),
+                            width: 300,
+                            height: 180),
+                        FlatButton(
+                          child: Text(
+                              _controller.value.isPlaying ? 'Pause' : 'Play'),
+                          onPressed: () {
+                            setState(() {
+                              _controller.value.isPlaying
+                                  ? _controller.pause()
+                                  : _controller.play();
+                            });
+                          },
+                        )
+                      ],
+                    )
+                  : Container(),
+              //
               TextField(
                 onChanged: (newValue) {
                   alarmName = newValue;
@@ -196,6 +240,9 @@ class _CreateAlarmState extends State<CreateAlarm> {
                   newAlarm.time = alarmTime;
                   newAlarm.runOnlyOnce = onlyOnce;
                   newAlarm.daySelector = selectedDaysOfWeek;
+                  if (link != null) {
+                    newAlarm.youtubeLink = link;
+                  }
                   if (widget.item != null) {
                     YAlarms oldAlarm = widget.item;
                     Provider.of<AlarmsProvider>(context, listen: false)
@@ -204,8 +251,14 @@ class _CreateAlarmState extends State<CreateAlarm> {
                     Provider.of<AlarmsProvider>(context, listen: false)
                         .addAlarm(newAlarm);
                   }
-
-                  Navigator.pop(context);
+                  Navigator.pop(context); // back to the select alarm page
+                  link = Provider.of<AlarmsProvider>(context, listen: false)
+                      .rsiLink;
+                  if (link != null) {
+                    Navigator.pop(context); // back to the home page
+                  }
+                  Provider.of<AlarmsProvider>(context, listen: false)
+                      .setrsiLink(null);
                 }),
           ),
         ),

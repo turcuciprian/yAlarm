@@ -7,8 +7,9 @@ import 'package:yalarm/screenArguments.dart';
 
 class SingleAlarmWidget extends StatefulWidget {
   final YAlarms item;
+  final String type;
   final AlarmsProvider alarmsProviderItem;
-  SingleAlarmWidget({Key key, this.item, this.alarmsProviderItem})
+  SingleAlarmWidget({Key key, this.item, this.alarmsProviderItem, this.type})
       : super(key: key);
 
   _SingleAlarmWidgetState createState() => _SingleAlarmWidgetState();
@@ -31,10 +32,12 @@ class _SingleAlarmWidgetState extends State<SingleAlarmWidget> {
               padding: const EdgeInsets.only(
                   left: 10.0, top: 16.0, bottom: 16.0, right: 0.0),
               decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey))),
+                  color:
+                      widget.type == 'select' ? Colors.grey : Colors.white,
+                  border: Border(bottom: widget.type == 'select' ? BorderSide(color: Colors.white): BorderSide(color: Colors.grey))),
               child: Text(
                 widget.item.title,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color:widget.type == 'select' ?Colors.white:Colors.black),
               ),
             ),
             onTap: () {
@@ -53,6 +56,9 @@ class _SingleAlarmWidgetState extends State<SingleAlarmWidget> {
             color: Colors.red,
           ),
           onDismissed: (direction) {
+            if(widget.type == 'select'){
+              return;
+            }
             final snackBar = SnackBar(
               content: Text('Delete Alarm "${widget.item.title}"'),
             );
@@ -69,5 +75,3 @@ class _SingleAlarmWidgetState extends State<SingleAlarmWidget> {
     // return Container();
   }
 }
-
-

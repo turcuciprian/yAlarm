@@ -11,19 +11,10 @@ class SelectAlarm extends StatefulWidget {
 }
 
 class _SelectAlarmState extends State<SelectAlarm> {
-  VideoPlayerController _controller = new VideoPlayerController.asset('');
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      String link = Provider.of<AlarmsProvider>(context, listen: false).rsiLink;
-      if (link != null) {
-        _controller = VideoPlayerController.network(
-          link,
-        )..initialize();
-      }
-    });
   }
 
   @override
@@ -31,23 +22,20 @@ class _SelectAlarmState extends State<SelectAlarm> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Alarm'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Provider.of<AlarmsProvider>(context, listen: false)
+                .setrsiLink(null);
+                Navigator.pop(context);
+          },
+        ),
       ),
       body: Container(
         child: Center(
           child: Column(children: [
-            Container(child: VideoPlayer(_controller), width: 300, height: 180),
-            FlatButton(
-              child: Text(_controller.value.isPlaying ? 'Pause' : 'Play'),
-              onPressed: () {
-                setState(() {
-                  _controller.value.isPlaying
-                      ? _controller.pause()
-                      : _controller.play();
-                });
-              },
-            ),
             Container(
-              child: new ListOfAlarms(),
+              child: new ListOfAlarms(type: 'select'),
             )
           ]),
         ),

@@ -6,7 +6,8 @@ import 'package:yalarm/SingleAlarmWidget.dart';
 import 'package:yalarm/alarmsProvider.dart';
 
 class ListOfAlarms extends StatefulWidget {
-  ListOfAlarms({Key key}) : super(key: key);
+  final String type;
+  ListOfAlarms({Key key, this.type}) : super(key: key);
   _ListOfAlarmsState createState() => _ListOfAlarmsState();
 }
 
@@ -23,7 +24,7 @@ class _ListOfAlarmsState extends State<ListOfAlarms> {
           return;
         }
         tempAllWidgetsAlarms.add(SingleAlarmWidget(
-            item: item, alarmsProviderItem: alarmsProviderItem));
+            item: item, alarmsProviderItem: alarmsProviderItem, type:widget.type));
       });
       allWidgetsAlarms = tempAllWidgetsAlarms;
     } else {
