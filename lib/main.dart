@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yalarm/ListOfAlarms.dart';
@@ -26,8 +24,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       onGenerateRoute: (settings) {
-          final ScreenArguments args = settings.arguments;
-        if (settings.name == '/createAlarm' && args!=null) {
+        final ScreenArguments args = settings.arguments;
+        if (settings.name == '/createAlarm' && args != null) {
           return MaterialPageRoute(builder: (context) {
             return CreateAlarm(item: args.item);
           });
